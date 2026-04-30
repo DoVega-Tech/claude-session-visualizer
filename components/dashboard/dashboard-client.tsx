@@ -3,6 +3,8 @@ import { useMemo, useState } from 'react'
 import type { SessionMeta } from '@/lib/sessions/types'
 import { HeaderBar } from './header-bar'
 import { KpiCards } from './kpi-cards'
+import { SessionsPerDay } from './charts/sessions-per-day'
+import { TokensPerDay } from './charts/tokens-per-day'
 
 export type SerializedSession = Omit<SessionMeta, 'startedAt' | 'endedAt' | 'toolCalls'> & {
   startedAt: string
@@ -69,7 +71,11 @@ export function DashboardClient({ sessions: raw, projectsDir }: { sessions: Seri
       />
       <main className="mx-auto max-w-[1400px] px-8 py-10 space-y-10">
         <KpiCards sessions={filtered} />
-        {/* Charts and swimlane added in Tasks 11-14 */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <SessionsPerDay sessions={filtered} />
+          <TokensPerDay sessions={filtered} />
+        </section>
+        {/* Swimlane added in Tasks 12-14 */}
       </main>
     </div>
   )
