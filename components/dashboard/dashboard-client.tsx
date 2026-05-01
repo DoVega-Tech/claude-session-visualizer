@@ -5,6 +5,12 @@ import { HeaderBar } from './header-bar'
 import { KpiCards } from './kpi-cards'
 import { SessionsPerDay } from './charts/sessions-per-day'
 import { TokensPerDay } from './charts/tokens-per-day'
+import { ToolFrequency } from './charts/tool-frequency'
+import { ModelUsage } from './charts/model-usage'
+import { AvgSessionLength } from './charts/avg-session-length'
+import { CostPerDay } from './charts/cost-per-day'
+import { ActivityHeatmap } from './charts/activity-heatmap'
+import { SwimlaneTimeline } from './swimlane-timeline'
 
 export type SerializedSession = Omit<SessionMeta, 'startedAt' | 'endedAt' | 'toolCalls'> & {
   startedAt: string
@@ -75,7 +81,18 @@ export function DashboardClient({ sessions: raw, projectsDir }: { sessions: Seri
           <SessionsPerDay sessions={filtered} />
           <TokensPerDay sessions={filtered} />
         </section>
-        {/* Swimlane added in Tasks 12-14 */}
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <ToolFrequency sessions={filtered} />
+          <ModelUsage sessions={filtered} />
+          <AvgSessionLength sessions={filtered} />
+        </section>
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="lg:col-span-1"><CostPerDay sessions={filtered} /></div>
+          <div className="lg:col-span-2"><ActivityHeatmap sessions={filtered} /></div>
+        </section>
+        <section>
+          <SwimlaneTimeline sessions={filtered} />
+        </section>
       </main>
     </div>
   )
