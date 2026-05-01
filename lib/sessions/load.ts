@@ -1,4 +1,6 @@
 import 'server-only'
+import path from 'node:path'
+import fs from 'node:fs/promises'
 import { scanProjectsDir } from './scanner'
 import { parseSessionFile } from './parser'
 import { sessionCache } from './cache'
@@ -21,15 +23,18 @@ export async function loadAllSessionMetas(): Promise<SessionMeta[]> {
   return out.sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime())
 }
 
-/** Full session load for the detail route. Bypasses cache (cache holds meta only). */
+/** Full session load for the detail route. Constructs path directly (no full scan). */
 export async function loadFullSession(
   projectId: string,
   sessionId: string,
 ): Promise<Session | null> {
-  const files = await scanProjectsDir(CLAUDE_PROJECTS_DIR)
-  const match = files.find(f => f.projectId === projectId && f.sessionId === sessionId)
-  if (!match) return null
-  const parsed = await parseSessionFile(match.filePath, { mode: 'full' })
+  const filePath = path.join(CLAUDE_PROJECTS_DIR, projectId, `${sessionId}.jsonl`)
+  try {
+    await fs.access(filePath)
+  } catch {
+    return null
+  }
+  const parsed = await parseSessionFile(filePath, { mode: 'full' })
   return (parsed as Session) ?? null
 }
 
