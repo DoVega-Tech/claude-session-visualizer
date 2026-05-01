@@ -5,7 +5,7 @@ import {
 } from '@/components/ui/select'
 import {
   DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent,
-  DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
+  DropdownMenuGroup, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { RefreshCw } from 'lucide-react'
 import { refreshSessions } from '@/app/actions'
@@ -49,17 +49,19 @@ export function HeaderBar({ range, onRangeChange, projects, selected, onSelected
               Projects {selected.length > 0 && `(${selected.length})`}
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-64">
-              <DropdownMenuLabel>Filter by project</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {projects.map(p => (
-                <DropdownMenuCheckboxItem
-                  key={p.id}
-                  checked={selected.includes(p.id)}
-                  onCheckedChange={() => toggle(p.id)}
-                >
-                  {p.label}
-                </DropdownMenuCheckboxItem>
-              ))}
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Filter by project</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {projects.map(p => (
+                  <DropdownMenuCheckboxItem
+                    key={p.id}
+                    checked={selected.includes(p.id)}
+                    onCheckedChange={() => toggle(p.id)}
+                  >
+                    {p.label}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
 
